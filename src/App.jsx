@@ -1,13 +1,40 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
-    const [upp, setUpp] = useState("one does not simply");
-    const [down, setDown] = useState("walk into mordor");
+    const [meme, setMeme] = useState({
+        topText: "one does not simply",
+        bottomtext: "walk into mordor",
+        randomImage: "http://i.imgflip.com/1bij.jpg",
+    });
+    const [allMemes, setAllMemes] = useState([]);
+
+    useEffect(() => {
+        fetch("https://api.imgflip.com/get_memes")
+            .then((res) => res.json())
+            .then((data) => setAllMemes(data.data.memes));
+    }, []);
+
+    function handleChange(event) {
+        const { name, value } = event.target;
+        setMeme((prevMeme) => ({
+            ...prevMeme,
+            [name]: value,
+        }));
+    }
+    function getMemeImage(event) {
+        event.preventDefault();
+        const randomNumber = Math.floor(Math.random() * allMemes.length);
+        const url = allMemes[randomNumber].url;
+        setMeme((prevMeme) => ({
+            ...prevMeme,
+            randomImage: url,
+        }));
+    }
     return (
         <div className="main bg-violet-100">
             <div className="bg-white">
-                <div className="p-4 theme text-white text-2xl font-bold">
+                <div className="p-4 text-2xl font-bold text-white theme">
                     Meme generator
                 </div>
                 <form className="grid gap-3 p-4">
@@ -15,28 +42,35 @@ function App() {
                         <input
                             className="form-input"
                             type="text"
-                            value={upp}
-                            onChange={(e) => setUpp(e.target.value)}
+                            name="topText"
+                            value={meme.topText}
+                            onChange={handleChange}
                         />
                         <input
                             className="form-input"
                             type="text"
-                            value={down}
-                            onChange={(e) => setDown(e.target.value)}
+                            name="bottomtext"
+                            value={meme.bottomtext}
+                            onChange={handleChange}
                         />
                     </div>
-                    <button className="w-full text-white theme py-2 rounded-md">
+                    <button
+                        className="w-full py-2 text-white rounded-md theme"
+                        onClick={getMemeImage}
+                    >
                         get a new meme Image 🖼
                     </button>
-                    <div className="w-full h-64 bg-lime-300 relative flex flex-col justify-between">
-                        <img
-                            src="./jack.jpeg"
-                            className="w-full h-full absolute bg-orange-400 rounded-md"
-                            alt="This is the meme"
-                        />
-                        <label className="memes">{upp}</label>
+                    <div className="relative flex flex-col justify-between w-full h-64 bg-lime-300">
+                        <div className="absolute w-full h-full">
+                            <img
+                                src={meme.randomImage}
+                                className="object-cover w-full h-full bg-orange-400 rounded-md"
+                                alt="This is the meme"
+                            />
+                        </div>
+                        <label className="memes">{meme.topText}</label>
 
-                        <label className="memes">{down}</label>
+                        <label className="memes">{meme.bottomtext}</label>
                     </div>
                 </form>
             </div>
