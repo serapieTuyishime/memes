@@ -8,11 +8,13 @@ function App() {
         randomImage: "http://i.imgflip.com/1bij.jpg",
     });
     const [allMemes, setAllMemes] = useState([]);
-
-    useEffect(() => {
+    function fetchMemes() {
         fetch("https://api.imgflip.com/get_memes")
             .then((res) => res.json())
-            .then((data) => setAllMemes(data.data.memes));
+            .then(({ data }) => setAllMemes(data.memes));
+    }
+    useEffect(() => {
+        fetchMemes();
     }, []);
 
     function handleChange(event) {
