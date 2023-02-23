@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .main {
+        @apply grid w-screen h-screen place-content-center;
+    }
+    .theme {
+        @apply bg-violet-500;
+    }
+    .form-input {
+        @apply py-2 rounded-md px-2 border border-gray-300;
+    }
+    .memes {
+        @apply text-white font-bold relative w-full text-center uppercase text-3xl my-3 max-w-[22rem] mx-auto whitespace-nowrap overflow-hidden text-ellipsis;
+    }
+}
